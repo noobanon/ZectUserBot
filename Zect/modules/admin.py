@@ -10,6 +10,7 @@ from Zect import app, CMD_HELP
 from Zect.helpers.pyrohelper import get_arg
 from Zect.helpers.adminhelpers import CheckAdmin
 from config import PREFIX
+from emoji import get_emoji_regexp
 
 CMD_HELP.update(
     {
@@ -49,7 +50,7 @@ async def promote(_, message: Message):
 
             if user_id:
                 try:
-                    await client.promote_chat_member(
+                    await app.promote_chat_member(
                         message.chat.id,
                         user_id,
                         can_change_info=True,
@@ -60,34 +61,34 @@ async def promote(_, message: Message):
                     )
 
                     await asyncio.sleep(2)
-                    await client.set_administrator_title(
+                    await app.set_administrator_title(
                         message.chat.id, user_id, custom_rank,
                     )
                     await message.delete()
                 except UsernameInvalid:
-                    await edit_or_reply("None User Found")
+                    await message.edit("None User Found") 
                     await asyncio.sleep(5)
                     await message.delete()
                     return
                 except PeerIdInvalid:
-                    await edit_or_reply("invalid User Or Chat")
+                    await message.edit("invalid User Or Chat")
                     await asyncio.sleep(5)
                     await message.delete()
                     return
                 except UserIdInvalid:
-                    await edit_or_reply("User id is invalid")
+                    await message.edit("User id is invalid")
                     await asyncio.sleep(5)
                     await message.delete()
                     return
 
                 except ChatAdminRequired:
-                    await edit_or_reply("You don't have permission to do this")
+                    await message.edit("You don't have permission to do this")
                     await asyncio.sleep(5)
                     await message.delete()
                     return
 
         else:
-            await edit_or_reply("You don't have permission to do this")
+            await message.edit("You don't have permission to do this")
             await asyncio.sleep(5)
             await message.delete()
     else:
